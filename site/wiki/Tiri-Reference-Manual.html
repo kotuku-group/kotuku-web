@@ -199,7 +199,6 @@
         <li>
         <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ext-collapse" aria-expanded="false">Extensions</button><div class="collapse" id="ext-collapse"><ul class="btn-toggle-nav list-unstyled pb-1">
         <li><a class="rounded" href="../modules/classes/scintilla.html">Scintilla</a></li>
-        <li><a class="rounded" href="../modules/classes/scintillasearch.html">ScintillaSearch</a></li>
         </ul></div>
         </li>
         <li>
@@ -464,6 +463,8 @@
 <li><code>goto</code> and <code>::label::</code> statements; superceded by <code>continue</code>, <code>break</code>, <code>defer</code></li>
 <li><code>bit.*</code> library; replaced with native bitwise operators</li>
 <li><code>select()</code>; replaced with result masks <code>[_*]</code></li>
+<li><code>collectgarbage()</code>; replaced with <code>processing.collect()</code></li>
+<li><code>newproxy()</code>; removed without replacement</li>
 <li><code>loadstring()</code>; replaced with <code>load()</code></li>
 <li><code>dofile()</code>; replaced with <code>loadFile()</code></li>
 <li><code>pcall()</code> and <code>xpcall()</code>; replaced with <code>try … except</code></li>
@@ -1474,13 +1475,13 @@ and native callbacks enforce the same contract. Checks are exact and do not conv
 numeric <code>num</code>-to-<code>int</code> representation coercion: a numeric string does not satisfy <code>num</code>, and a number does not satisfy
 <code>str</code>. <code>func</code> includes values accepted through normal callable dispatch.
 Named structure annotations require the exact named layout, and <code>range</code> accepts only range userdata. The <code>userdata</code>
-type accepts ordinary full userdata, such as values returned by <code>newproxy()</code>, and light userdata exposed by native
-bindings. A range remains a distinct type and does not satisfy <code>userdata</code>.</p>
+type accepts ordinary full userdata, such as compiled regex values, and light userdata exposed by native bindings. A
+range remains a distinct type and does not satisfy <code>userdata</code>.</p>
 <div class="sourceCode" id="cb52"><pre class="sourceCode lua"><code class="sourceCode lua"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> retain_proxy<span class="op">(</span><span class="va">Proxy</span><span class="op">:</span><span class="va">userdata</span><span class="op">):</span><span class="va">userdata</span></span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> <span class="va">Proxy</span></span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
 <span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="kw">local</span> <span class="va">proxy</span><span class="op">:</span><span class="va">userdata</span> <span class="op">=</span> retain_proxy<span class="op">(</span>newproxy<span class="op">(</span><span class="kw">true</span><span class="op">))</span></span></code></pre></div>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="kw">local</span> <span class="va">proxy</span><span class="op">:</span><span class="va">userdata</span> <span class="op">=</span> retain_proxy<span class="op">(</span><span class="va">regex</span><span class="op">.</span>new<span class="op">(</span><span class="st">&#39;&#39;</span><span class="op">))</span></span></code></pre></div>
 <p>By default, <code>nil</code> satisfies every parameter annotation. This includes omitted arguments, which arrive as <code>nil</code>.
 Append <code>!</code> to the type to require a value:</p>
 <div class="sourceCode" id="cb53"><pre class="sourceCode lua"><code class="sourceCode lua"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> load_profile<span class="op">(</span><span class="va">Name</span><span class="op">:</span><span class="va">str</span>!<span class="op">):</span><span class="va">table</span>!</span>
@@ -3667,7 +3668,8 @@ computed member such as <code>viewport[&#39;new&#39;]</code> is ordinary field a
 <p>Note: If an object has been created as the child of another, e.g. <code>viewport.new(&#39;VectorRectangle&#39;, { ... })</code> then the object is already weakly referenced and detach() will do nothing.</p>
 <h4 id="objectfree">object.free()</h4>
 <p>Call <code>free()</code> to terminate an object resource immediately without removing the interface. If the object is weakly referenced then <code>free()</code> is the most practical means of removal.</p>
-<p>Calling <code>free()</code> is discouraged in general usage - a safer pattern is to set object references to <code>nil</code> and either wait for garbage collection or call <code>collectgarbage()</code>.</p>
+<p>Calling <code>free()</code> is discouraged in general usage - a safer pattern is to set object references to <code>nil</code> and either wait
+for garbage collection or call <code>processing.collect()</code>.</p>
 <h3 id="garbage-collection">Garbage Collection</h3>
 <p>The garbage collector will automatically terminate an object once all references to that object are released or the script is terminated. If an object has a single reference, you can manually terminate it by setting the reference to <code>nil</code>, for example:</p>
 <div class="sourceCode" id="cb207"><pre class="sourceCode lua"><code class="sourceCode lua"><span id="cb207-1"><a href="#cb207-1" aria-hidden="true" tabindex="-1"></a><span class="va">file</span> <span class="op">=</span> <span class="va">obj</span><span class="op">.</span>new<span class="op">(</span><span class="st">&#39;File&#39;</span><span class="op">)</span></span>
@@ -4181,7 +4183,7 @@ Non-string candidates return <code>false</code>, and pointer or object fields co
 <hr>
 <h2 id="regular-expression-interface">Regular Expression Interface</h2>
 <p>The regular expression interface provides compiled regex objects for high-performance pattern matching and text manipulation. Unlike Lua&#39;s basic pattern matching, the regex interface offers full PCRE-compatible regular expression support through compiled objects that can be created once and reused multiple times.</p>
-<p>For more information on our regex implementation, please refer to our <a href="./Regex-Manual.html">Regex Manual</a>.</p>
+<p>For more information on our regex implementation, please refer to our <a href="./Regex-Manual">Regex Manual</a>.</p>
 <h3 id="creating-a-regex">Creating a Regex</h3>
 <p>To create a compiled regex object, use the <code>new()</code> method with the following prototype:</p>
 <p><code>rx = regex.new(Pattern, [Flags])</code></p>
