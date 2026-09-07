@@ -1,0 +1,18 @@
+version: 2
+
+updates:
+  # Keeps the SHA-pinned actions in .github/workflows/ current. Dependabot reads
+  # the trailing "# vX.Y.Z" comment to know which version each SHA represents,
+  # and updates both the SHA and the comment together.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "[CI]"
+    groups:
+      # One PR for the whole set rather than four; these are upgraded together
+      # in practice and the Pages actions are released as a matched wave.
+      actions:
+        patterns:
+          - "*"
