@@ -3,6 +3,15 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns="http://www.w3.org/1999/xhtml">
 
+  <!-- Shared navigation (navbar + sidebar).  Edit build/nav.xsl to change the site navigation.
+       xsl:import (rather than xsl:include) is required so that the 'root' parameter can be overridden below. -->
+
+  <xsl:import href="nav.xsl"/>
+
+  <!-- Module pages live in site/modules/, one level below the site root. -->
+
+  <xsl:param name="root" select="'../'"/>
+
   <!-- python3 -m http.server -d /kotuku/docs/xml -->
 
   <xsl:output
@@ -182,22 +191,7 @@
       </head>
 
       <body>
-        <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-          <div class="container-fluid">
-            <div class="navbar-header"><a class="navbar-brand" href="../index.html">Kōtuku</a></div>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button><xsl:text>&#xa;</xsl:text>
-            <div id="navbar" class="collapse navbar-collapse">
-              <ul class="nav navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="../gallery.html">Gallery</a></li>
-                <li class="nav-item"><a class="nav-link" href="api.html">API</a></li>
-                <li class="nav-item"><a class="nav-link" href="../wiki/Home.html">Wiki</a></li>
-                <li class="nav-item"><a class="nav-link" href="https://github.com/kotuku-group/kotuku">GitHub</a></li>
-              </ul><xsl:text>&#xa;</xsl:text>
-            </div> <!-- nav-collapse -->
-          </div>
-        </nav>
+        <xsl:call-template name="nav-bar"/>
         <xsl:text>&#xa;</xsl:text>
         <div class="container-fluid"> <!-- 'container-fluid' for full width, 'container' for restricted -->
           <div class="row">
@@ -240,250 +234,7 @@
   </li>
 </ul>
 
-<!-- MODULES -->
-
-<ul class="list-unstyled">
-  <li class="border-top my-3"></li> <!-- Line break -->
-  <li><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#mod-collapse" aria-expanded="false">Modules</button>
-    <div class="collapse" id="mod-collapse">
-      <ul class="btn-toggle-nav list-unstyled fw-normal">
-        <li class="api-ref"><a href="audio.html" class="rounded">Audio</a></li>
-        <li class="api-ref"><a href="core.html" class="rounded">Core</a></li>
-        <li class="api-ref"><a href="display.html" class="rounded">Display</a></li>
-        <li class="api-ref"><a href="font.html" class="rounded">Font</a></li>
-        <li class="api-ref"><a href="network.html" class="rounded">Network</a></li>
-        <li class="api-ref"><a href="regex.html" class="rounded">Regex</a></li>
-        <li class="api-ref"><a href="tiri.html" class="rounded">Tiri</a></li>
-        <li class="api-ref"><a href="vector.html" class="rounded">Vector</a></li>
-        <li class="api-ref"><a href="xml.html" class="rounded">XML</a></li>
-        <li class="api-ref"><a href="xquery.html" class="rounded">XQuery</a></li>
-      </ul>
-    </div>
-  </li>
-</ul>
-
-<!-- CLASS LIST -->
-
-<ul class="list-unstyled">
-  <li class="border-top my-3"></li> <!-- Line break -->
-  <li><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#class-collapse" aria-expanded="false">Classes</button>
-    <div class="collapse" id="class-collapse">
-      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3">
-        <li><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#audio-collapse" aria-expanded="false">Audio</button>
-          <div class="collapse" id="audio-collapse">
-            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1">
-              <li><a href="classes/audio.html" class="rounded">Audio</a></li>
-              <li><a href="classes/sound.html" class="rounded">Sound</a></li>
-            </ul>
-          </div>
-        </li>
-
-        <li><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#core-collapse" aria-expanded="false">Core</button>
-          <div class="collapse" id="core-collapse">
-            <ul class="btn-toggle-nav list-unstyled pb-1">
-              <li><a href="classes/file.html" class="rounded">File</a></li>
-              <li><a href="classes/metaclass.html" class="rounded">MetaClass</a></li>
-              <li><a href="classes/module.html" class="rounded">Module</a></li>
-              <li><a href="classes/storagedevice.html" class="rounded">StorageDevice</a></li>
-              <li><a href="classes/task.html" class="rounded">Task</a></li>
-              <li><a href="classes/thread.html" class="rounded">Thread</a></li>
-              <li><a href="classes/time.html" class="rounded">Time</a></li>
-            </ul>
-          </div>
-        </li>
-
-        <li><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#data-collapse" aria-expanded="false">Data</button>
-          <div class="collapse" id="data-collapse">
-            <ul class="btn-toggle-nav list-unstyled pb-1">
-              <li><a href="classes/compression.html" class="rounded">Compression</a></li>
-              <li><a href="classes/compressedstream.html" class="rounded">CompressedStream</a></li>
-              <li><a href="classes/config.html" class="rounded">Config</a></li>
-              <li><a href="classes/script.html" class="rounded">Script</a></li>
-              <li><a href="classes/xml.html" class="rounded">XML</a></li>
-              <li><a href="classes/xquery.html" class="rounded">XQuery</a></li>
-            </ul>
-          </div>
-        </li>
-
-        <li><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#devices-collapse" aria-expanded="false">Devices</button>
-          <div class="collapse" id="devices-collapse">
-            <ul class="btn-toggle-nav list-unstyled pb-1">
-              <li><a href="classes/controller.html" class="rounded">Controller</a></li>
-            </ul>
-          </div>
-        </li>
-
-        <li><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#effects-collapse" aria-expanded="false">Effects</button>
-          <div class="collapse" id="effects-collapse">
-            <ul class="btn-toggle-nav list-unstyled pb-1">
-              <li><a class="rounded" href="classes/blurfx.html">BlurFX</a></li>
-              <li><a class="rounded" href="classes/colourfx.html">ColourFX</a></li>
-              <li><a class="rounded" href="classes/compositefx.html">CompositeFX</a></li>
-              <li><a class="rounded" href="classes/convolvefx.html">ConvolveFX</a></li>
-              <li><a class="rounded" href="classes/displacementfx.html">DisplacementFX</a></li>
-              <li><a class="rounded" href="classes/filtereffect.html">FilterEffect</a></li>
-              <li><a class="rounded" href="classes/floodfx.html">FloodFX</a></li>
-              <li><a class="rounded" href="classes/imagefx.html">ImageFX</a></li>
-              <li><a class="rounded" href="classes/lightingfx.html">LightingFX</a></li>
-              <li><a class="rounded" href="classes/mergefx.html">MergeFX</a></li>
-              <li><a class="rounded" href="classes/morphologyfx.html">MorphologyFX</a></li>
-              <li><a class="rounded" href="classes/offsetfx.html">OffsetFX</a></li>
-              <li><a class="rounded" href="classes/remapfx.html">RemapFX</a></li>
-              <li><a class="rounded" href="classes/sourcefx.html">SourceFX</a></li>
-              <li><a class="rounded" href="classes/turbulencefx.html">TurbulenceFX</a></li>
-              <li><a class="rounded" href="classes/wavefunctionfx.html">WaveFunctionFX</a></li>
-            </ul>
-          </div>
-        </li>
-
-        <li><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ext-collapse" aria-expanded="false">Extensions</button>
-          <div class="collapse" id="ext-collapse">
-            <ul class="btn-toggle-nav list-unstyled pb-1">
-              <li><a class="rounded" href="classes/scintilla.html">Scintilla</a></li>
-            </ul>
-          </div>
-        </li>
-
-        <li><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#gfx-collapse" aria-expanded="false">Graphics</button>
-          <div class="collapse" id="gfx-collapse">
-            <ul class="btn-toggle-nav list-unstyled pb-1">
-              <li><a class="rounded" href="classes/bitmap.html">Bitmap</a></li>
-              <li><a class="rounded" href="classes/clipboard.html">Clipboard</a></li>
-              <li><a class="rounded" href="classes/display.html">Display</a></li>
-              <li><a class="rounded" href="classes/document.html">Document</a></li>
-              <li><a class="rounded" href="classes/font.html">Font</a></li>
-              <li><a class="rounded" href="classes/image.html">Image</a></li>
-              <li><a class="rounded" href="classes/pointer.html">Pointer</a></li>
-              <li><a class="rounded" href="classes/surface.html">Surface</a></li>
-              <li><a class="rounded" href="classes/svg.html">SVG</a></li>
-            </ul>
-          </div>
-        </li>
-
-        <li><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#net-collapse" aria-expanded="false">Network</button>
-          <div class="collapse" id="net-collapse">
-            <ul class="btn-toggle-nav list-unstyled pb-1">
-              <li><a class="rounded" href="classes/clientsocket.html">ClientSocket</a></li>
-              <li><a class="rounded" href="classes/http.html">HTTP</a></li>
-              <li><a class="rounded" href="classes/netclient.html">NetClient</a></li>
-              <li><a class="rounded" href="classes/netlookup.html">NetLookup</a></li>
-              <li><a class="rounded" href="classes/netserver.html">NetServer</a></li>
-              <li><a class="rounded" href="classes/netsocket.html">NetSocket</a></li>
-              <li><a class="rounded" href="classes/proxy.html">Proxy</a></li>
-            </ul>
-          </div>
-        </li>
-
-        <li><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#vectors-collapse" aria-expanded="false">Vectors</button>
-          <div class="collapse" id="vectors-collapse">
-            <ul class="btn-toggle-nav list-unstyled pb-1">
-              <li><a class="rounded" href="classes/gradient.html">Gradient</a></li>
-              <li><a class="rounded" href="classes/gradientconic.html">GradientConic</a></li>
-              <li><a class="rounded" href="classes/gradientcontour.html">GradientContour</a></li>
-              <li><a class="rounded" href="classes/gradientdiamond.html">GradientDiamond</a></li>
-              <li><a class="rounded" href="classes/gradientdistal.html">GradientDistal</a></li>
-              <li><a class="rounded" href="classes/gradientgouraud.html">GradientGouraud</a></li>
-              <li><a class="rounded" href="classes/gradientlinear.html">GradientLinear</a></li>
-              <li><a class="rounded" href="classes/gradientmesh.html">GradientMesh</a></li>
-              <li><a class="rounded" href="classes/gradientradial.html">GradientRadial</a></li>
-              <li><a class="rounded" href="classes/gradientvoronoi.html">GradientVoronoi</a></li>
-              <li><a class="rounded" href="classes/vector.html">Vector</a></li>
-              <li><a class="rounded" href="classes/vectorclip.html">VectorClip</a></li>
-              <li><a class="rounded" href="classes/vectorcolour.html">VectorColour</a></li>
-              <li><a class="rounded" href="classes/vectorellipse.html">VectorEllipse</a></li>
-              <li><a class="rounded" href="classes/vectorfilter.html">VectorFilter</a></li>
-              <li><a class="rounded" href="classes/vectorgroup.html">VectorGroup</a></li>
-              <li><a class="rounded" href="classes/vectorimage.html">VectorImage</a></li>
-              <li><a class="rounded" href="classes/vectorpath.html">VectorPath</a></li>
-              <li><a class="rounded" href="classes/vectorpattern.html">VectorPattern</a></li>
-              <li><a class="rounded" href="classes/vectorpolygon.html">VectorPolygon</a></li>
-              <li><a class="rounded" href="classes/vectorrectangle.html">VectorRectangle</a></li>
-              <li><a class="rounded" href="classes/vectorscene.html">VectorScene</a></li>
-              <li><a class="rounded" href="classes/vectorshape.html">VectorShape</a></li>
-              <li><a class="rounded" href="classes/vectorspiral.html">VectorSpiral</a></li>
-              <li><a class="rounded" href="classes/vectortext.html">VectorText</a></li>
-              <li><a class="rounded" href="classes/vectortransition.html">VectorTransition</a></li>
-              <li><a class="rounded" href="classes/vectorviewport.html">VectorViewport</a></li>
-              <li><a class="rounded" href="classes/vectorwave.html">VectorWave</a></li>
-            </ul>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </li>
-</ul> <!-- Classes -->
-
-<!-- WIKI -->
-
-<ul class="list-unstyled">
-  <li class="border-top my-3"></li> <!-- Line break -->
-  <li>
-    <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#wiki-collapse" aria-expanded="false">Wiki</button>
-    <div class="collapse" id="wiki-collapse">
-      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3">
-         <li><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#bp-collapse" aria-expanded="false">Build Process</button>
-         <div class="collapse" id="bp-collapse">
-            <ul class="btn-toggle-nav list-unstyled pb-1">
-              <li class="api-ref"><a class="rounded" href="../wiki/Linux-Builds.html">Linux Builds</a></li>
-              <li class="api-ref"><a class="rounded" href="../wiki/Windows-Builds.html">Windows Builds</a></li>
-              <li class="api-ref"><a class="rounded" href="../wiki/Customising-Your-Build.html">Customising Your Build</a></li>
-            </ul>
-         </div></li>
-
-         <li><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#tm-collapse" aria-expanded="false">Technical Manuals</button>
-         <div class="collapse" id="tm-collapse">
-            <ul class="btn-toggle-nav list-unstyled pb-1">
-             <li class="api-ref"><a class="rounded" href="../wiki/Kotuku-Objects.html">Kōtuku Objects</a></li>
-             <li class="api-ref"><a class="rounded" href="../wiki/Kotuku-In-Depth.html">Kōtuku In Depth</a></li>
-           </ul>
-         </div></li>
-
-         <li><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#fg-collapse" aria-expanded="false">Tiri</button>
-         <div class="collapse" id="fg-collapse">
-            <ul class="btn-toggle-nav list-unstyled pb-1">
-            <li class="api-ref"><a class="rounded" href="../wiki/Tiri-Reference-Manual.html">Tiri Reference Manual</a></li>
-            <li class="api-ref"><a class="rounded" href="../wiki/Tiri-GUI-API.html">GUI API</a></li>
-            <li class="api-ref"><a class="rounded" href="../wiki/Tiri-JSON-API.html">JSON API</a></li>
-            <li class="api-ref"><a class="rounded" href="../wiki/Tiri-VFX-API.html">VFX API</a></li>
-            <li class="api-ref"><a class="rounded" href="../wiki/Tiri-Widgets.html">Widgets</a></li>
-           </ul>
-         </div></li>
-
-         <li><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#rrm-collapse" aria-expanded="false">RIPL</button>
-         <div class="collapse" id="rrm-collapse">
-            <ul class="btn-toggle-nav list-unstyled pb-1">
-              <li class="api-ref"><a class="rounded" href="../wiki/RIPL-Reference-Manual.html">RIPL Reference Manual</a></li>
-           </ul>
-         </div></li>
-
-         <li><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#tools-collapse" aria-expanded="false">Tools</button>
-         <div class="collapse" id="tools-collapse">
-            <ul class="btn-toggle-nav list-unstyled pb-1">
-              <li class="api-ref"><a class="rounded" href="../wiki/Origo.html">Origo</a></li>
-              <li class="api-ref"><a class="rounded" href="../wiki/Unit-Testing.html">Flute / Unit Testing</a></li>
-           </ul>
-         </div></li>
-
-         <li><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#doc-collapse" aria-expanded="false">Doc Generation</button>
-         <div class="collapse" id="doc-collapse">
-            <ul class="btn-toggle-nav list-unstyled pb-1">
-              <li class="api-ref"><a class="rounded" href="../wiki/Embedded-Document-Formatting.html">Embedded Document Format</a></li>
-              <li class="api-ref"><a class="rounded" href="../wiki/TDL-Reference-Manual.html">TDL Reference Manual</a></li>
-              <li class="api-ref"><a class="rounded" href="../wiki/TDL-Tools.html">TDL Tools</a></li>
-           </ul>
-         </div></li>
-
-         <li><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#app-collapse" aria-expanded="false">Appendix</button>
-         <div class="collapse" id="app-collapse">
-            <ul class="btn-toggle-nav list-unstyled pb-1">
-             <li class="api-ref"><a class="rounded" href="../wiki/Action-Reference-Manual.html">Action Reference Manual</a></li>
-             <li class="api-ref"><a class="rounded" href="../wiki/System-Error-Codes.html">System Error Codes</a></li>
-           </ul>
-         </div></li>
-      </ul>
-    </div>
-  </li>
-</ul>
+<xsl:call-template name="nav-sidebar"/>
               </div>
             </div>
 
@@ -665,13 +416,7 @@ var glCurrentMethod;
 
 const ready = fn => document.readyState !== 'loading' ? fn() : document.addEventListener('DOMContentLoaded', fn);
 
-   var xslt = false;
-   var url = window.location.pathname;
-   var filename = url.substring(url.lastIndexOf('/')+1);
-   if (filename.endsWith(".xml")) { // XSLT is being used to view this document
-      filename = filename.substr(0, filename.length-3) + 'html';
-      xslt = true;
-   }
+   var xslt = window.location.pathname.endsWith(".xml"); // XSLT is being used to view this document
 
 ready(function(){
    // Initialise tooltips
@@ -681,6 +426,8 @@ ready(function(){
    })
 
    glCurrentMethod = document.getElementById("Introduction");
+
+   highlightNavLink(); // Highlight and open the sidebar branch for this page (see base.js)
 
    var page = glParameters["page"];
    if (isEmpty(page)) page = glParameters["function"];

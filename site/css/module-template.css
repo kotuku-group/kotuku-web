@@ -2,6 +2,10 @@
 body {
 
 }
+.navbar-nav > .nav-item {
+  /* github-markdown.css adds a top margin to adjacent list items. */
+  margin-top: 0;
+}
 .starter-template {
   padding: 40px 15px;
 }

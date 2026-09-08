@@ -34,3 +34,26 @@ const getParentNode = (child, selector) =>
    while (e = r.exec(q))
       glParameters[d(e[1])] = d(e[2]);
 })();
+
+// Highlight the sidebar entry for the current page and open its enclosing branch.
+//
+// Anchors expose a fully resolved .pathname, so matching against that works regardless of how the href was written.
+// This matters because the sidebar is shared between module, class and wiki pages, which sit at different depths and
+// therefore carry different relative prefixes.  Comparing resolved paths also removes the old ambiguity between a
+// module and a class of the same name (e.g. modules/audio.html vs modules/classes/audio.html).
+
+function highlightNavLink() {
+   var path = window.location.pathname;
+   if (path.endsWith('.xml')) path = path.substr(0, path.length-4) + '.html'; // XSLT browsing mode
+
+   var links = document.querySelectorAll('li.api-ref > a');
+   for (var i=0; i < links.length; i++) {
+      if (links[i].pathname !== path) continue;
+
+      var parent = getParentNode(links[i], '[class="collapse"]');
+      if (parent) new bootstrap.Collapse(parent, { show: true }); // Causes animation
+
+      links[i].style.backgroundColor = '#d2f4ea';
+      return links[i];
+   }
+}
